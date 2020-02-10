@@ -1,0 +1,113 @@
+:revealjs_theme: solarized
+:revealjs_progress: false
+:revealjs_slideNumber: c/t
+:revealjs_fragmentInURL: true
+:revealjs_transitionSpeed: fast
+
+= Shibboleth, Ski to Sea
+
+Making the world a better place, through synergistic applicative face talking.
+
+== Overview
+
+* Communication philosophy
+* Engineering philosophy
+* Practice philosophy
+* Some GAE stuff
+
+== Communication philosophy
+
+== Engineering philosophy
+
+[.notes]
+--
+Engineering philosophy is important.
+--
+
+* Usability is everything.
+
+== Practice philosophy
+
+Put usability first. Become an expert in the tools. The law of trial and error necessitates a focus on productivity.
+
+=== Developer usability
+
+
+
+=== Product usability
+
+== The Story of Shibboleth
+
+== Version 1
+
+=== Version 1, Environment
+
+* FireCloud deploy practice: Jenkins -> GCE VM
+* Secrets in Vault
+
+=== Version 1, Developer Usability
+
+* SAML is an unfamiliar technology.
+* Support from eRA Commons IT department only via back-channel.
+* Priority, then, is on preventing this pain for others.
+
+=== Version 1, Product Usability
+
+* Correct operation means users will not know the system exists.
+* Priority is simplicity and stability.
+* Simplicity helps ensure the developers implement the exchange correctly.
+
+=== Version 1, Implementation
+
+* libapache2-mod-shib2 (recommended by eRA Commons IT)
+* Convert SAML exchange into JWT, signed with a shared secret.
+* Full example flow implemented on production system.
+
+=== A Note on Developer Usability
+
+* Stack is ClojureScript on Node.
+* Power versus learning curve.
+  ** Software engineers are expert users.
+  ** Therefore, I choose powerful tools and expect to invest more in training.
+
+=== Version 1, Drawbacks
+
+* Apache adds significant complexity.
+** Tightly-coupled architecture adds deployment requirements
+* Shared secret is hard to distribute.
+  ** Requires coordination, which adds roughly an order of magnitude to clients' development efforts.
+
+== Version 2
+
+=== Version 2, Requirements
+
+* Implement SAML exchange using a library.
+  ** Greatly simplifies the system, reducing deployment requirements and increasing velocity.
+* Use public/private key pair for JWT signing.
+  ** Eliminates coordination requirement.
+
+=== Version 2, Implementation
+
+* saml2-js
+* Node on GAE Standard
+* Secrets in GCS
+
+=== Vresion 2, Demo
+
+* Dev and prod workflows.
+* Example implementation.
+
+== Appendix: App Engine REPL
+
+=== Why?
+
+* Dev environments are not common.
+* Perfecting the dev environment requires expertise in the system.
+
+=== How?
+
+* Permissions
+* Forking versus more subtle approaches
+* Read-only directory
+* Node require caching
+* Separation of concerns
