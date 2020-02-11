@@ -4,98 +4,159 @@
 :revealjs_fragmentInURL: true
 :revealjs_transitionSpeed: fast
 
-= Shibboleth, Ski to Sea
+= Shibboleth, Version+++&nbsp;+++2
 
-Making the world a better place, through synergistic applicative face talking.
-
-== Overview
-
-* Communication philosophy
-* Engineering philosophy
-* Practice philosophy
-* Some GAE stuff
-
-== Communication philosophy
-
-== Engineering philosophy
+Better alignment with engineering values.
 
 [.notes]
 --
-Engineering philosophy is important.
+. Honor the attendees.
+
+I'm embarrased to say that I am underprepared for this presentation, since I signed up last week. If I stumble a bit, now you know why. If I pull this off, it is because I am blessed to have had this forum to practice speaking to an audience occasionally during my time at Broad, and practice is transformative.
+
+I should point out that I could have rescheduled. The SoftEng steering committee, of which I am a member, is not a group of tyrants that demands speaking committments to be signed in blood. But as I began to put this presentation together, it morphed from centering around one of my current projects into something more foundational, and I wanted to share my thoughts with you now, even at the cost of some stress.
+
+And with that, I'll begin.
 --
 
+== History
+
+[.notes]
+--
+At one of my previous jobs, I worked with another engineer on an iPhone app called On the Fly. Low-fare flight search. The engineer I worked with was a friend from grad school, and we had already spent years talking about programming. Working together, our conversations were passionate and fun. We bounced ideas around about how to extract the last drop of performance out of the iPhone's limited processor so that our users could explore their flight search results without experiencing UI jitter. The challange was rewarding, but at the end of the day, we were proud of our work. Our users may have never asked for us to go the lengths that we did, but they noticed. We decided that ours was the best app in that space, and at home I have a framed article from the New York Times praising our work. My pride comes not from that praise, but from focusing every ounce of my skill and energy on serving our users, and I am grateful that our combined skill allowed us to serve them so well. That is how I want to feel about the software we build here.
+--
+
+== Vision
+
+__Create a joyful experience by building software the exudes impeccable craftsmenship.__
+
+[.notes]
+--
+My personal vision, then, is to create joyful experiences by building sofware that exudes impeccable crafsmenship. At the Broad, a joyful experience includes the joy of scientific discovery, but the mechanism is the same. Impeccable craftsmenship is incredibly difficult. That's the type of challenge I want at work and that is the type of work I want to hand to my users.
+
+So how do we get there?
+
+When I started in DSP, I was afraid to talk about engineering philosophy. In the back of my mind, I must have known it was important because of my past experiences, but I did not connect that to my experiences here. My fear was that talking about engineering philosophy and values was a waste of people's time.
+
+Now I know better. Engineering a large system involving multiple teams is an incredibly complex endeavor. In the case of DSP, the space is largely unexplored, so we will have to throw away many working solutions before we approach some that have beauty. To have a chance, we must be extremely efficient. Aligning our values will greatly increase our efficiency.
+
+For example, suppose I design a component and choose a dynamic language for implementation. Someone might come to me and say, without compile-time type checking, you're going to have to write more tests to ensure correctness. I say, "but the concision that allows me to understand the system better will mitigate that." The tradeoffs in this argument are complex, so even if one of us concedes, nobody wins.
+
+Say, instead, we talk values first. I share that my goal is to get a usable system in front of users as quickly as possible so I can get feedback and iterate. You tell me compile-time type checking is the way to go. Now you're my ally. Now you are the source of some information that might help me reach my goals more effectively! Regardless of the outcome, our conversation will be productive and engaging.
+
+This topic needs to become part of our conversational practice. What is the goal, then what is the solution? We can seed this conversational practice through our documentation practice.
+
+So, today, to practice what I am quite literally preaching to you right now, I'm going to present my design of version 2 of the Shibboleth service.
+--
+
+== Philosophy
+
 * Usability is everything.
+* Trial and error is the most effective approach to creating usable software. Therefore, prioritize productivity.
+* Choose tools carefully and become an expert.
+* Complexity kills productivity.
 
-== Practice philosophy
+[.notes]
+--
+Philosophy: ...a theory or attitude held by a person or organization that acts as a guiding principle for behavior.
+--
 
-Put usability first. Become an expert in the tools. The law of trial and error necessitates a focus on productivity.
+== Joyful Experience
 
-=== Developer usability
+Users:
 
+* People who wish to link their eRA Commons account to their Terra account.
+* People who wish to use this service to allow their users to link their acounts.
+** These users deserve to be finicky.
+* People who write and deploy Shibboleth services.
 
+[.notes]
+--
+My goal is to make this service so wonderful to use that engineers would prefer to integrate with my service over writing the code themselves.
 
-=== Product usability
+In reality, the bar is much lower. To do a handshake with the eRA Commons identity provider system, you must get support from the NIH's eRA Commons login support team. Contacting this team does not, as you might expect, unlock an overflowing well of support and expertise. You are kind of on your own.
 
-== The Story of Shibboleth
+So all I really have to do is to make it slightly less painful to integrate with my service than it is to deal with the NIH eRA Commons login support team.
 
-== Version 1
+That does not exude impeccable craftsmenship. It does not flex my skills as an engineer. I want to shoot for the theoretical maximum of user joy because that is what brings me joy.
+--
 
-=== Version 1, Environment
+== Shibboleth, Version 1
+
+=== Requirements
+
+. Don't make other people talk to NIH eRA Commons support team.
+. Don't make other people learn SAML.
+. Minimize coordination burden for integrating.
+
+=== Implementation
 
 * FireCloud deploy practice: Jenkins -> GCE VM
 * Secrets in Vault
-
-=== Version 1, Developer Usability
-
-* SAML is an unfamiliar technology.
-* Support from eRA Commons IT department only via back-channel.
-* Priority, then, is on preventing this pain for others.
-
-=== Version 1, Product Usability
-
-* Correct operation means users will not know the system exists.
-* Priority is simplicity and stability.
-* Simplicity helps ensure the developers implement the exchange correctly.
-
-=== Version 1, Implementation
-
 * libapache2-mod-shib2 (recommended by eRA Commons IT)
 * Convert SAML exchange into JWT, signed with a shared secret.
 * Full example flow implemented on production system.
 
-=== A Note on Developer Usability
+== Shibboleth, Version 2
 
-* Stack is ClojureScript on Node.
-* Power versus learning curve.
-  ** Software engineers are expert users.
-  ** Therefore, I choose powerful tools and expect to invest more in training.
+=== Requirements
 
-=== Version 1, Drawbacks
+* Fixable
+* Fix a security bug
 
-* Apache adds significant complexity.
-** Tightly-coupled architecture adds deployment requirements
-* Shared secret is hard to distribute.
-  ** Requires coordination, which adds roughly an order of magnitude to clients' development efforts.
+== Increasing Joy and Applying Philosophy
 
-== Version 2
+=== Terra Users
 
-=== Version 2, Requirements
+* Version 1
+  ** System goes down a few times each year for a day or so.
+  ** Fix requires connecting to the VM.
+* Version 2
+  ** System goes down less often.
+  ** Deployment is easier so fixes can go out faster.
 
-* Implement SAML exchange using a library.
-  ** Greatly simplifies the system, reducing deployment requirements and increasing velocity.
-* Use public/private key pair for JWT signing.
-  ** Eliminates coordination requirement.
+=== System Integrators
 
-=== Version 2, Implementation
+* Version 1
+  ** Shared secret to verify JWT.
+  ** Dev and production environments point to eRA Commons dev and production.
+* Version 2
+  ** Public key to verify JWT.
+  ** Mock flow to support development environments.
+  ** Improved transparency and documentation.
 
-* saml2-js
-* Node on GAE Standard
-* Secrets in GCS
+=== Us
 
-=== Vresion 2, Demo
+* Version 1
+  ** Coupled Apache and Node for SAML and business logic.
+* Version 2
+  ** SAML implemented using saml2-js JavaScript library, eliminating Apache
+  ** Deployment moved to App Engine
+  ** Secrets moved to Cloud Storage
 
-* Dev and prod workflows.
-* Example implementation.
+== ClojureScript -> JavaScript
+
+* Clojure is a simpler, more powerful language.
+* It requires Java and a compiler.
+* Data structure conversion is a performance bottleneck.
+* Other languages I know well: C, Perl, Lisp, Objective-C, Java, Python, JavaScript.
+* JavaScript is the least crippled in comparison.
+
+[.notes]
+--
+Any developer that becomes proficient in Clojure is more productive than they would be in any other programming language I know.
+--
+
+=== Tools of the Craft
+
+=== Philosophy vs. Judgement
+
+[.notes]
+--
+Philosophy changes slowly. Judgement is flexible.
+
+My philosophy hasn't changed a bit. I'm just refining how I apply it as I learn.
+--
 
 == Appendix: App Engine REPL
 
